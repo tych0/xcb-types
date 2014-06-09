@@ -353,7 +353,6 @@ structField el
     | el `named` "reply" = fail "" -- handled separate
 
     | el `named` "doc" = do
-        brief <- liftM strContent $ el `child` "brief"
         fields <- el `children` "field"
         let mkField = \x -> fmap (\y -> (y, strContent x)) $ x `attr` "name"
             fields' = Map.fromList $ catMaybes $ map mkField fields
@@ -361,6 +360,7 @@ structField el
             sees' = catMaybes $ flip map sees $ \s -> do typ <- s `attr` "type"
                                                          name <- s `attr` "name"
                                                          return (typ, name)
+            brief = fmap strContent $ findChild (unqual "brief") el
         return $ Doc brief fields' sees'
 
     | el `named` "fd" = do
@@ -467,11 +467,6 @@ children :: MonadPlus m => Element -> String -> m [Element]
       some -> return $ onlyElems some
     where p (Elem (Element n _ _ _)) | n == unqual name = True
           p _ = False
-
-child :: MonadPlus m => Element -> String -> m Element
-e `child` n = case findChild (unqual n) e of
-                Just el -> return el
-                _ -> mzero
 
 -- adapted from Network.CGI.Protocol
 readM :: (MonadPlus m, Read a) => String -> m a

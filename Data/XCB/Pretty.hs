@@ -112,7 +112,7 @@ instance Pretty a => Pretty (GenStructElem a) where
     toDoc (Doc brief fields see)
         = text "Doc" <+>
           text "::" <+>
-          text "brief=" <+> text brief <+> text ";" <+>
+          text "brief=" <+> text (fromMaybe "" brief) <+>
           text "fields=" <+>
           hsep (punctuate (char ',') $ joinWith ":" $ Map.toList fields) <+>
           text ";" <+>

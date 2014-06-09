@@ -97,7 +97,7 @@ data GenStructElem typ
     | ExprField Name typ (Expression typ)
     | ValueParam typ Name (Maybe MaskPadding) ListName
     | Switch Name (Expression typ) [GenBitCase typ]
-    | Doc String (Map Name String) [(String, String)]
+    | Doc (Maybe String) (Map Name String) [(String, String)]
     | Fd String
  deriving (Show, Functor)
 
